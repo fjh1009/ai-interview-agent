@@ -1,13 +1,21 @@
-# AI Interview
+# 智面（AI Interview Agent）
 
-一个面向求职场景的 **AI 模拟面试系统**。  
-项目围绕“**简历解析 -> 岗位匹配 -> RAG 出题 -> AI 评分 -> 面试报告**”构建了完整闭环，重点体现了我在 **AI 应用开发、工程化落地、RAG 设计、Agent 工作流编排** 方面的能力。
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi)
+![Vue3](https://img.shields.io/badge/Vue3-4FC08D?style=flat-square&logo=vuedotjs)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql)
+![pgvector](https://img.shields.io/badge/pgvector-316192?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker)
+![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat-square&logo=langchain)
+![DeepSeek](https://img.shields.io/badge/DeepSeek-4D6BFE?style=flat-square)
+
+一个面向求职场景的 **AI 模拟面试系统**。
+项目围绕"**简历解析 → 岗位匹配 → RAG 出题 → AI 评分 → 面试报告**"构建了完整闭环，重点体现了我在 **AI 应用开发、工程化落地、RAG 设计、Agent 工作流编排** 方面的能力。
 
 ---
 
 ## 项目简介
 
-传统模拟面试系统通常只解决“出题”和“评分”，而这个项目进一步把 AI 放到了求职链路前面：
+传统模拟面试系统通常只解决"出题"和"评分"，而这个项目进一步把 AI 放到了求职链路前面：
 
 - 用户上传简历后，系统先调用 AI 解析简历并落库
 - 基于岗位匹配 Agent，对候选人画像进行分析并推荐更适合的岗位方向
@@ -16,6 +24,20 @@
 - 输出结构化面试报告，帮助用户明确能力差距和下一步学习方向
 
 这个项目不是单一 Prompt Demo，而是一个包含 **前端、后端、数据库、异步任务、向量检索、Agent 编排、Docker 部署** 的完整 AI 应用项目。
+
+---
+
+## 核心截图
+
+![简历上传与解析](./项目截图/6.简历上传.png)
+
+![简历解析结果](./项目截图/8.解析结果.png)
+
+![面试问答与 AI 评分](./项目截图/10.面试场景.png)
+
+![岗位匹配 Agent 结果](./项目截图/13.匹配结果1.png)
+
+![面试报告](./项目截图/11.生成报告.png)
 
 ---
 
@@ -31,8 +53,6 @@
 - AI 评分与反馈
 - 面试报告输出
 
-
-
 ### 2. 题库 RAG
 
 项目中实现了两套 RAG，其中真正接入主业务的是 **题库 RAG**：
@@ -41,23 +61,23 @@
 - 将题目与参考答案拼接后做向量化
 - 使用 `PostgreSQL + pgvector` 存储 embedding
 - 面试发起时，结合岗位和简历技能做语义召回
-- 当题库不足时，采用“二次召回 + AI 兜底补全”的策略保证流程稳定
+- 当题库不足时，采用"二次召回 + AI 兜底补全"的策略保证流程稳定
 
 相比纯 AI 生成题目，这种方式让题目更贴近岗位，也让评分更可控。
 
-### 3. 评分不是“凭感觉”，而是基于题库标准答案
+### 3. 评分不是"凭感觉"，而是基于题库标准答案
 
 用户回答问题后，系统不会直接让大模型自由打分，而是把题库中的：
 
 - `reference_answer`
 - `key_points`
 
-一起注入评分 Prompt，作为评分参考依据。  
-这样可以显著提升评分稳定性，减少大模型“凭感觉评分”的不确定性。
+一起注入评分 Prompt，作为评分参考依据。
+这样可以显著提升评分稳定性，减少大模型"凭感觉评分"的不确定性。
 
 ### 4. 实现了岗位匹配 Agent，而不是单纯表单跳转
 
-项目含有 **岗位匹配 Agent**功能，用于把“简历解析”和“模拟面试”连接起来。
+项目含有 **岗位匹配 Agent** 功能，用于把"简历解析"和"模拟面试"连接起来。
 
 它不是凭空推荐岗位，而是：
 
@@ -78,7 +98,6 @@
 - 静态文件挂载与容器内服务通信
 - API 分层、Service 分层、Schema 分层
 - 向量检索、异步任务、SSE 流式输出
-
 
 ---
 
@@ -191,17 +210,16 @@ Agent 主流程：
 ## 项目结构
 
 ```text
-ai-interview/
+ai-interview-agent/
 ├─ ai-interview-backend/     # FastAPI + PostgreSQL + Redis + Celery
-├─ ai-interview-frontend/    # 用户端前端
-├─ ai-interview-admin/       # 管理端前端
-├─ 面试要点.md               # 项目口述与面试整理
-├─ 项目RAG实现原理.md         # RAG 技术链路说明
+├─ ai-interview-frontend/    # 用户端前端（Vue 3）
+├─ ai-interview-admin/       # 管理端前端（Vue 3）
+├─ 项目截图/                 # 项目功能截图
+├─ 题库生成/                 # 各岗位题库 JSON（Java / Python / Vue / React 等）
+└─ 题库和知识库文档（用于后台上传）/  # 导入后台的示例题目与知识库文档
 ```
 
 ---
-
-
 
 ## 工程化设计亮点
 
@@ -234,7 +252,7 @@ ai-interview/
 
 ### Agent 采用工具调用工作流
 
-岗位匹配 Agent 不是“一个大 Prompt 全部搞定”，而是显式拆成多步工具调用：
+岗位匹配 Agent 不是"一个大 Prompt 全部搞定"，而是显式拆成多步工具调用：
 
 - `get_parsed_resume`
 - `build_candidate_profile`
@@ -254,58 +272,73 @@ ai-interview/
 - Celery Worker
 - Celery Beat
 
-对 AI 应用项目来说，这一点很重要，因为它体现的是“可运行、可联调、可部署”的完整能力。
+对 AI 应用项目来说，这一点很重要，因为它体现的是"可运行、可联调、可部署"的完整能力。
 
 ---
 
 ## 启动方式
 
-### 1. 启动后端
+### 1. 准备环境变量
 
-进入：
+进入后端目录并创建环境配置：
 
 ```bash
 cd ai-interview-backend
+cp .env.example .env
 ```
 
-使用 Docker Compose 启动：
+必填项（在 `.env` 中填写）：
+
+- `DEEPSEEK_API_KEY`：申请地址 https://platform.deepseek.com/
+- `DASHSCOPE_API_KEY`：申请地址 https://dashscope.console.aliyun.com（开通"通用文本向量"服务）
+
+### 2. 启动后端
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
-### 2. 启动用户端前端
+该命令会拉起 FastAPI 应用、PostgreSQL、Redis、Celery Worker、Celery Beat（开发模式下 Nginx 不启动）。
 
-进入：
-
-```bash
-cd ai-interview-frontend
-```
-
-安装依赖并启动：
+### 3. 启动用户端前端
 
 ```bash
+cd ../ai-interview-frontend
 npm install
 npm run dev
 ```
 
-### 3. 启动管理端前端
+访问 http://localhost:3000
 
-进入：
-
-```bash
-cd ai-interview-admin
-```
-
-安装依赖并启动：
+### 4. 启动管理端前端
 
 ```bash
+cd ../ai-interview-admin
 npm install
 npm run dev
 ```
 
-> 说明：实际运行前需要补充 `.env` 配置，例如数据库、Redis、DeepSeek、DashScope 等相关参数。
+访问 http://localhost:3001
 
+### 5. 创建管理员账号与初始化数据（首次运行）
 
+管理端需要管理员账号才能登录，首次运行需执行两个初始化脚本：
+
+```bash
+# 创建超级管理员（默认账号与密码见脚本内说明）
+docker exec ai-interview-app python scripts/create_first_admin.py
+
+# 初始化岗位模板（岗位匹配 Agent 的数据源）
+docker exec ai-interview-app python scripts/seed_position_templates.py
+```
+
+> 管理端登录后，可导入 `题库和知识库文档（用于后台上传）/` 中的示例题目与知识库文档，即可完整体验完整流程。
+>
+> ⚠️ 初始化脚本中的默认管理员密码仅用于本地开发，部署到公网前务必修改。
 
 ---
+
+## 说明
+
+- README 中的截图来自本地演示数据，仅用于功能展示。
+- 项目采用前后端分离 + Docker 编排，除大模型 API（DeepSeek / DashScope）外无需任何额外第三方服务——数据库、向量检索、缓存与异步任务全部本地容器化。
